@@ -63,7 +63,7 @@ public abstract class UserData implements authetication {
     @Override
     public boolean login(String email, String password) {
         for (UserData user : users) {
-            if (user.email.equals(email) && user.password.equals(password)) {
+            if (email.equals(user.email) && password.equals(user.password)) {
                 System.out.println("Login Successful! Welcome, " + user.firstName + " " + user.lastName + "!");
                 return true;
             }
@@ -73,7 +73,7 @@ public abstract class UserData implements authetication {
     }
     @Override
     public String toString() {
-        return "First Name: " + firstName + "\nLast Name: " + lastName + "\nEmail: " + email + "Date of Registered: " + dateRegister;
+        return "First Name: " + firstName + "\nLast Name: " + lastName + "\nEmail: " + email + "\nDate of Registered: " + dateRegister;
     }
 
     @Override

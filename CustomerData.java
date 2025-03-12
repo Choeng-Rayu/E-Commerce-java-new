@@ -299,15 +299,19 @@ public class CustomerData extends UserData {
                         break;
                     }
                     case 5 -> {
-                        System.out.println("Warning! Your cart will not save when you lug out the account! ");
-                        System.out.println("Are you sure?\nEnter (yes) to continoue: ");
-                        Scanner s = new Scanner(System.in);
-                        String input = s.nextLine();
-                        if(input.equalsIgnoreCase("yes") || input.equalsIgnoreCase("y")){
-                            AddToCart.cartClear();
+                        if(AddToCart.CartisEmpty()){
                             menuRole = false;
                         }else{
-                            System.out.println("Your cart was not clear!");
+                            System.out.println("Warning! Your cart will not save when you lug out the account! ");
+                            System.out.println("Are you sure?\nEnter (yes) to continoue: ");
+                            Scanner s = new Scanner(System.in);
+                            String input = s.nextLine();
+                            if(AddToCart.logoutClearCart(input)){
+                                System.out.println("Your cart was cleared!");
+                                menuRole = false;
+                            }else{
+                                System.out.println("Your cart was not cleared!");
+                            }
                         }
                         
                         break;

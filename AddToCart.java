@@ -36,7 +36,7 @@ public class AddToCart extends Product {
         public void recordSale() {
             soldProducts.add(this);
         }
-        
+
         // Getter methods
         public String getBuyerName() { return buyerName; }
         public String getDateBought() { return dateBought; }
@@ -60,12 +60,6 @@ public class AddToCart extends Product {
                             sold.productId, sold.productName, sold.price, sold.quantity,
                             sold.soldBy, sold.buyerName, sold.dateBought);
         }
-    }
-    public static void cartClear(){
-        cart.clear();
-        totalProductAddedCart = 0;
-
-        System.out.println("Your cart was cleared!");
     }
     public void addProductToCart(int id, int quantityAdded) {
         for (Product productAdded : products) {
@@ -141,6 +135,22 @@ public class AddToCart extends Product {
         } else {
             System.out.println("Invalid Password! Payment was not successful");
         }
+    }
+    public static boolean CartisEmpty(){
+        if(cart.isEmpty()){
+            return true;
+        }
+        return false;
+    }
+    public static boolean logoutClearCart(String input){
+        if(input.equalsIgnoreCase("yes") || input.equalsIgnoreCase("y")){
+            cart.clear();
+            totalProductAddedCart = 0;
+            //menuRole = false;
+            return true;
+        }
+        return false;
+                        
     }
     public void removeProductFromCart(int index) {
         for (Product productRemove : cart) {

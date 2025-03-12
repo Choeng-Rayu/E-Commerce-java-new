@@ -83,7 +83,17 @@ public class AdminExtends extends UserData {
 
         }
     }
-
+    @Override
+    public boolean login(String email, String password) {
+        
+            if (email.equals(this.email) && password.equals(this.getPassword())) {
+                System.out.println("Login Successful! Welcome, " + this.firstName + " " + this.lastName + "!");
+                return true;
+            }
+        
+        System.out.println("Login failed. Incorrect email or password.");
+        return false;
+    }
     public void adminLogIn(){
         boolean adminLogIn = true;
         Scanner scanner = new Scanner(System.in);
