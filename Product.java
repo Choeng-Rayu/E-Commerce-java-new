@@ -14,7 +14,7 @@ public class Product {
     public static int totalProductAddedCart = 0;
     public double totalMoneyForPay = 0;
     public static ArrayList<Product> products = new ArrayList<>();
-    public static ArrayList<Product> cart = new ArrayList<>();
+    //public static ArrayList<Product> cart = new ArrayList<>();
     SellerData seller = new SellerData("", "", "", "");
 
     // Constructor
@@ -25,12 +25,6 @@ public class Product {
         this.quantity = quantity;
         this.pushBy = pushBy;
         this.datePush = getCurrentDateTimeInCambodia();
-    }
-    public static void cartClear(){
-        cart.clear();
-        totalProductAddedCart = 0;
-
-        System.out.println("Your cart was cleared!");
     }
     public void DeleteProductByAdmin() {
         Scanner scanner1 = new Scanner(System.in);
@@ -173,7 +167,8 @@ public class Product {
                 System.out.println("3. Delete Products");
                 System.out.println("4. Display Products");
                 System.out.println("5. Search Products");
-                System.out.println("6. Back to Main Menu");
+                System.out.println("6. Check Products Sold");
+                System.out.println("7. Back to Main Menu");
 
                 System.out.print("Choose an option: ");
                 String choice = scanner.nextLine();
@@ -239,7 +234,11 @@ public class Product {
                         }
                         searchMenu();
                     }
-                    case 6 -> {
+                    case 6 ->{
+                        AddToCart cart = new AddToCart(0, "", 0, 0, "");
+                        cart.displaySoldProducts();
+                    }
+                    case 7 -> {
                         productManagement = false;
                     }
                     default -> System.out.println("Invalid choice. Try again.");
@@ -310,146 +309,6 @@ public class Product {
         LocalDateTime currentDateTime = LocalDateTime.now(cambodiaZoneId);
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
         return currentDateTime.format(formatter);
-    }
-
-    public void addProductToCart(int id, int quantityAdded) {
-        for (Product productAdded : products) {
-            if (productAdded.id == id) {
-                if (productAdded.quantity >= quantityAdded && quantityAdded > 0) {
-                    Product cartProduct = new Product(productAdded.id, productAdded.name, productAdded.price, quantityAdded, productAdded.pushBy);
-                    cart.add(cartProduct);
-                    productAdded.quantity -= quantityAdded;
-                    totalProductAddedCart += quantityAdded;
-                    //System.out.println("Product: " + cartProduct.name + " " + cartProduct.price + " " + cartProduct.pushBy + " " + cartProduct.datePush);
-                    System.out.println("Product added to cart successfully");
-                    System.out.println("WARNING: Your cart will be remove after you logout!");    
-                } else {
-                    System.out.println("Insufficient quantity");
-                }
-                return;
-            }
-        }
-        System.out.println("Product not found");
-    }
-    public void displayCart() {
-        System.out.println("Cart:");
-        System.out.printf("%-5s %-9s %-16s %-13s %-13s %-15s %-15s\n", "No", "ID", "Name", "Price$", "Quantity", "PushBy", "Date");
-        System.out.println("-----------------------------------------------------------------------------------------------");
-        int i = 0;
-        totalMoneyForPay = 0;
-        for (Product productAdded : cart) {
-            System.out.printf("%-3d %-3s %-5d %-2s %-12s %-2s %-10.2f %-2s %-10d %-3s %-10s %-1s %-10s\n", i, "|", productAdded.id, "|", productAdded.name, "|", productAdded.price, "|", productAdded.quantity, "|", productAdded.pushBy, "|", productAdded.datePush);
-            i++;
-            totalMoneyForPay += productAdded.price * productAdded.quantity;
-        }
-        System.out.println("Total Quantity: " + totalProductAddedCart);
-        System.out.println("Total Price: " + totalMoneyForPay + "$");
-    }
-
-    public void removeProductFromCart(int index) {
-        for (Product productRemove : cart) {
-            if (productRemove.id == index) {
-                cart.remove(productRemove);
-                totalProductAddedCart -= productRemove.quantity;
-                System.out.println("Product removed from cart successfully");
-                return;
-            }
-        }
-        System.out.println("Product not found");
-    }
-    public void Payment(){
-        displayCart();
-        System.out.println("Please Enter Password for paying to Veryfy!");
-        CustomerData c = new CustomerData("", "", "", "");
-        if(c.verifyPassword()){
-            //System.out.println("Change: " + (payment - totalMoenyForPay));
-            cart.clear();
-            totalProductAddedCart = 0;
-                //System.out.println("Payment successfully");
-            System.out.println("Payment successfully");
-        } else {
-            System.out.println("Invalid Password!, Payment was not successfully");
-        }
-
-    }
-    public void menuShopping() {
-        Scanner scanner = new Scanner(System.in);
-        boolean menuShopping = true;
-
-        while (menuShopping) {
-            try {
-                System.out.println("\n==== SHOPPING ====");
-                System.out.println("0. Exit");
-                System.out.println("1. Add to Cart");
-                System.out.println("2. Remove from Cart");
-                System.out.println("3. Check Out");
-                System.out.println("4. Payment");
-                System.out.println("5. Search Product");
-                System.out.println("6. Back to Previous Menu");
-                System.out.print("Choose an option: ");
-                
-                String input = scanner.nextLine();
-                NumberOnlyException.validateNumber(input, "^[0-9]+$"); // Call static method
-                int choice = Integer.parseInt(input);
-
-                switch (choice) {
-                    case 0 -> {
-                        System.out.println("Exited");
-                        System.exit(0);
-                    }
-                    case 1 -> {
-                        if(products.isEmpty()){
-                            System.out.println("No Product!");
-                            return;
-                        }
-                        displayAllProduct();
-                        System.out.print("Enter product ID To add Product Cart: ");
-                        String idInputStr = scanner.nextLine();
-                        NumberOnlyException.validateNumber(idInputStr, "^[0-9]+$");
-                        int idInput = Integer.parseInt(idInputStr);
-
-                        System.out.print("Enter quantity: ");
-                        String quantityInputStr = scanner.nextLine();
-                        NumberOnlyException.validateNumber(quantityInputStr, "^[0-9]+$");
-                        int quantityInput = Integer.parseInt(quantityInputStr);
-
-                        addProductToCart(idInput, quantityInput);
-                    }
-                    case 2 -> {
-                        displayCart();
-                        if(cart.isEmpty()){
-                            System.out.println("No Product in Cart!");
-                            return;
-                        }
-                        System.out.print("Enter product ID to remove: ");
-                        String idInputStr = scanner.nextLine();
-                        NumberOnlyException.validateNumber(idInputStr, "^[0-9]+$");
-                        int idInput = Integer.parseInt(idInputStr);
-
-                        removeProductFromCart(idInput);
-                    }
-                    case 3 -> {
-                        displayCart(); 
-                        if(cart.isEmpty()){
-                        System.out.println("No Product in Cart!");
-                        return;
-                        }
-                    }
-                    case 4 -> {
-                        if(cart.isEmpty()){
-                            System.out.println("No Product in Cart!");
-                            return;
-                        }
-                        Payment();
-                    }
-                    case 5 -> searchMenu();
-                    case 6 -> menuShopping = false;
-                    default -> System.out.println("Invalid choice. Try again.");
-                }
-            } catch (NumberOnlyException e) {
-                System.out.println("Error: " + e.getMessage());
-            }
-        }
     }
     public static void main(String[] args){
         Product c = new Product(1, "book", 123.56, 10, "rayu");

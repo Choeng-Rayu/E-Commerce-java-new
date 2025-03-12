@@ -4,9 +4,9 @@ import java.util.Scanner;
 public class CustomerData extends UserData {
     int id;
     private static int totalcd = 0;
-    public static String buyer;
-    private String currentPassword;
-    private ArrayList<Product> cart = new ArrayList<>();
+    public static String CurrentNameLogin;
+    //private String currentPassword;
+    //private ArrayList<Product> cart = new ArrayList<>();
     // List to store registered cd
     public static ArrayList<CustomerData> cd = new ArrayList<>();
 
@@ -14,9 +14,6 @@ public class CustomerData extends UserData {
     public CustomerData(String firstName, String lastName, String email, String password) {
         super(firstName, lastName, email, password);
         this.id = ++totalcd;
-    }
-    public String getCurrentPassword(){
-        return currentPassword;
     }
     @Override
     public void register(String firstName, String lastName, String email, String password) {
@@ -32,19 +29,18 @@ public class CustomerData extends UserData {
     }
 
     @Override
-    public boolean login(String email, String password) {
+    public boolean login(String email, String passwordInput) {
         for (CustomerData c : cd) {
-            if (c.email.equals(email) && c.getPassword().equals(password)) {
+            if (c.email.equals(email) && c.getPassword().equals(passwordInput)) {
                 System.out.println("Login Successful! Welcome, " + c.firstName + " " + c.lastName + "!");
-                buyer = c.firstName + " " + c.lastName;
-                this.currentPassword = getPassword();
+                CurrentNameLogin = c.firstName + " " + c.lastName;
+                setCurrentPw(passwordInput);
                 return true;
             }
         }
         System.out.println("Login failed. Incorrect email or password.");
         return false;
     }
-
     @Override
     public String toString() {
         return "ID: " + id + "\nFirst Name: " + firstName + "\nLast Name: " + lastName + "\nEmail: " + email + "Date Registerd: " + dateRegister;
@@ -91,7 +87,8 @@ public class CustomerData extends UserData {
     public String checkProfile(String email) {
         for (CustomerData c : cd) {
             if (c.email.equals(email)) {
-                System.out.println("Found: ");
+                //System.out.println("");
+                System.out.println("==== PROFILE ====");
                 return toString();
             }
         }
@@ -273,7 +270,10 @@ public class CustomerData extends UserData {
                         //System.out.print("Please enter email again to verify: ");
                         //String emailInput = scanner.nextLine();
                         //System.out.println(checkProfile(emailInput));
-                        System.err.println(toString());
+                        //System.out.println(toString());
+                        System.out.print("Please enter email again to verify: ");
+                        String emailInput = scanner.nextLine();
+                        System.out.println(checkProfile(emailInput));
                         break;
                     }
                     case 2 -> {
@@ -293,8 +293,9 @@ public class CustomerData extends UserData {
                         break;
                     }
                     case 4 -> {
-                        Product p = new Product(0, "", 0, 0, "");
-                        p.menuShopping();
+                        //Product p = new Product(0, "", 0, 0, "");
+                        AddToCart cart = new AddToCart(0, "", 0, 0, "");
+                        cart.menuShopping();
                         break;
                     }
                     case 5 -> {
@@ -303,7 +304,7 @@ public class CustomerData extends UserData {
                         Scanner s = new Scanner(System.in);
                         String input = s.nextLine();
                         if(input.equalsIgnoreCase("yes") || input.equalsIgnoreCase("y")){
-                            Product.cartClear();
+                            AddToCart.cartClear();
                             menuRole = false;
                         }else{
                             System.out.println("Your cart was not clear!");

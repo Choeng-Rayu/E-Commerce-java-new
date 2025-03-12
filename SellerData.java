@@ -89,6 +89,7 @@ public class SellerData extends UserData{
     public String checkProfile(String email) {
         for (SellerData seller : sellers) {
             if (seller.email.equals(email)) {
+                System.out.println("==== PROFILE ====");
                 return seller.toString();
             }
         }
@@ -176,7 +177,6 @@ public class SellerData extends UserData{
                     case 1 -> {
                         System.out.print("Please enter email again to verify: ");
                         String emailInput = scanner.nextLine();
-                        System.out.println("==== PROFILE ====");
                         System.out.println(checkProfile(emailInput));
                         break;
                     }
