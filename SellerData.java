@@ -60,6 +60,7 @@ public class SellerData extends UserData{
             if (seller.email.equals(email) && seller.getPassword().equals(password)) {
                 System.out.println("Login Successful! Welcome, " + seller.firstName + " " + seller.lastName + "!");
                 setCurrentPw(password);
+                //SellerData.passwordCurrentLogin = getCurrentPw();
                 pushByName = seller.firstName + " " + seller.lastName;
                 return true;
             }

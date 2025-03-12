@@ -11,7 +11,7 @@ public abstract class UserData implements authetication {
     public String email;
     private String password;
     String dateRegister;
-    private String passwordCurrentLogin;
+    private static String passwordCurrentLogin;
     // List to store registered users
     static ArrayList<UserData> users = new ArrayList<>();
     //UserData user = new UserData("", "", "", "", "");	
@@ -25,7 +25,8 @@ public abstract class UserData implements authetication {
         this.dateRegister = getCurrentDateTimeInCambodia();
     }
     public void setCurrentPw(String password){
-        this.passwordCurrentLogin = password;
+        UserData.passwordCurrentLogin = password;
+        this.password = password;
     }
     public String getCurrentPw(){
         return passwordCurrentLogin;

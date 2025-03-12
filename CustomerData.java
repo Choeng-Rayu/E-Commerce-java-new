@@ -34,7 +34,7 @@ public class CustomerData extends UserData {
             if (c.email.equals(email) && c.getPassword().equals(passwordInput)) {
                 System.out.println("Login Successful! Welcome, " + c.firstName + " " + c.lastName + "!");
                 CurrentNameLogin = c.firstName + " " + c.lastName;
-                setCurrentPw(passwordInput);
+                setCurrentPw(c.getPassword());
                 return true;
             }
         }
@@ -89,7 +89,7 @@ public class CustomerData extends UserData {
             if (c.email.equals(email)) {
                 //System.out.println("");
                 System.out.println("==== PROFILE ====");
-                return toString();
+                return c.toString();
             }
         }
         return "Not Found";
