@@ -19,7 +19,7 @@ public class ConnectorDataBase {
         try {
             // Step 1: Connect to the database (like opening a door)
             try (Connection conn = DriverManager.getConnection(url, username, password)) {
-                System.out.println("Yay! We connected to the database!");
+                System.out.println("Yay! We connected to the database!❤️👌");
 
                 // Step 2: Ask the user for information to add to the database
                 System.out.println("Please enter an ID number:");
@@ -62,5 +62,51 @@ public class ConnectorDataBase {
 
         // Close the scanner to clean up
         scanner.close();
+    }
+}
+
+
+
+public class InsertDataExample {
+    public static void main(String[] args) {
+        String url = "jdbc:mysql://localhost:3306/your_database"; // Change to your DB URL
+        String username = "your_username"; // Change to your DB username
+        String password = "your_password"; // Change to your DB password
+
+        try (Connection connection = DriverManager.getConnection(url, username, password)) {
+            String query = "INSERT INTO your_table (column1, column2, column3) VALUES (?, ?, ?)";
+            PreparedStatement preparedStatement = connection.prepareStatement(query);
+
+            // Add multiple inserts to the batch
+            connection.setAutoCommit(false); // Disable auto-commit for batch processing
+
+            // Insert 1st row
+            preparedStatement.setString(1, "Value1");
+            preparedStatement.setString(2, "Value2");
+            preparedStatement.setString(3, "Value3");
+            preparedStatement.addBatch();
+
+            // Insert 2nd row
+            preparedStatement.setString(1, "Value4");
+            preparedStatement.setString(2, "Value5");
+            preparedStatement.setString(3, "Value6");
+            preparedStatement.addBatch();
+
+            // Insert 3rd row
+            preparedStatement.setString(1, "Value7");
+            preparedStatement.setString(2, "Value8");
+            preparedStatement.setString(3, "Value9");
+            preparedStatement.addBatch();
+
+            // Execute batch
+            int[] results = preparedStatement.executeBatch();
+
+            connection.commit(); // Commit the transaction
+
+            System.out.println("Inserted " + results.length + " rows successfully.");
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 }

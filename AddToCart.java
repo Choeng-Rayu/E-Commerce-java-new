@@ -13,21 +13,21 @@ public class AddToCart extends Product {
         totalProductAdded += quantity;
     }
     public class ProductSold {
-        private String buyerName;
-        private String dateBought; // Changed to match constructor
-        private int productId;
-        private String productName;
-        private double price;
-        private int quantity;
-        private String soldBy;
+        public String buyerName;
+        public String dateBought; // Changed to match constructor
+        public int productId;
+        public String productName;
+        public double price;
+        public int quantity;
+        public String boughtName;
 
         public ProductSold(int productId, String productName, double price, int quantity, 
-                         String soldBy, String buyerName, String dateBought) {
+                         String boughtName, String buyerName, String dateBought) {
             this.productId = productId;
             this.productName = productName;
             this.price = price;
             this.quantity = quantity;
-            this.soldBy = soldBy;
+            this.boughtName = boughtName;
             this.buyerName = buyerName;
             this.dateBought = dateBought;
         }
@@ -37,12 +37,12 @@ public class AddToCart extends Product {
             soldProducts.add(this);
         }
 
-        // Getter methods
-        public String getBuyerName() { return buyerName; }
-        public String getDateBought() { return dateBought; }
-        public int getProductId() { return productId; }
-        public double getPrice() { return price; }
-        public int getQuantity() { return quantity; }
+        // // Getter methods
+        // public String getBuyerName() { return buyerName; }
+        // public String getDateBought() { return dateBought; }
+        // public int getProductId() { return productId; }
+        // public double getPrice() { return price; }
+        // public int getQuantity() { return quantity; }
     }
 
     // Method to display all sold products
@@ -58,7 +58,7 @@ public class AddToCart extends Product {
         for (ProductSold sold : soldProducts) {
             System.out.printf("%-5d %-12s %-10.2f %-10d %-12s %-12s %-15s\n",
                             sold.productId, sold.productName, sold.price, sold.quantity,
-                            sold.soldBy, sold.buyerName, sold.dateBought);
+                            sold.boughtName, sold.buyerName, sold.dateBought);
         }
     }
     public void addProductToCart(int id, int quantityAdded) {

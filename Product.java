@@ -13,6 +13,8 @@ public class Product {
     public String pushBy;
     public static int totalProductAddedCart = 0;
     public double totalMoneyForPay = 0;
+    
+    
     public static ArrayList<Product> products = new ArrayList<>();
     //public static ArrayList<Product> cart = new ArrayList<>();
     SellerData seller = new SellerData("", "", "", "");
