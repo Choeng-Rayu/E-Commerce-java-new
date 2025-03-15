@@ -182,6 +182,7 @@ public class LoginRegistrationGUI {
         }else{
             seller.register(firstName, lastName, email, password);
             //firstNameField = "";
+            //registerMessageLabel.setText("Registration successful!");
         }
     }
 }
