@@ -1,90 +1,3 @@
-// import java.awt.GridBagConstraints;
-// import java.awt.GridBagLayout;
-// import java.awt.Insets;
-// import java.awt.event.ActionEvent;
-// import java.awt.event.ActionListener;
-// import javax.swing.JButton;
-// import javax.swing.JFrame;
-// import javax.swing.JLabel;
-// import javax.swing.JOptionPane;
-// import javax.swing.JPanel;
-// import javax.swing.JPasswordField;
-// import javax.swing.JTextField;
-
-// public class GUI {
-//     // public static void LoginGUI() {
-//     //     // Create JFrame
-//     //     JFrame frame = new JFrame("Customer Login");
-//     //     frame.setSize(400, 250);
-//     //     frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-//     //     frame.setLayout(new GridBagLayout());
-        
-//     //     GridBagConstraints gbc = new GridBagConstraints();
-//     //     gbc.insets = new Insets(5, 5, 5, 5);
-//     //     gbc.fill = GridBagConstraints.HORIZONTAL;
-
-//     //     // Email Label and Field
-//     //     JLabel emailLabel = new JLabel("Enter Email:");
-//     //     gbc.gridx = 0;
-//     //     gbc.gridy = 0;
-//     //     frame.add(emailLabel, gbc);
-        
-//     //     JTextField emailField = new JTextField(20);
-//     //     gbc.gridx = 1;
-//     //     frame.add(emailField, gbc);
-
-//     //     // Password Label and Field
-//     //     JLabel passwordLabel = new JLabel("Enter Password:");
-//     //     gbc.gridx = 0;
-//     //     gbc.gridy = 1;
-//     //     frame.add(passwordLabel, gbc);
-        
-//     //     JPasswordField passwordField = new JPasswordField(20);
-//     //     gbc.gridx = 1;
-//     //     frame.add(passwordField, gbc);
-        
-//     //     // Login Button
-//     //     JButton loginButton = new JButton("Login");
-//     //     gbc.gridx = 1;
-//     //     gbc.gridy = 2;
-//     //     frame.add(loginButton, gbc);
-        
-//     //     // Message Label
-//     //     JLabel messageLabel = new JLabel("");
-//     //     gbc.gridx = 1;
-//     //     gbc.gridy = 3;
-//     //     frame.add(messageLabel, gbc);
-        
-//     //     // Button Action
-//     //     loginButton.addActionListener(new ActionListener() {
-//     //         @Override
-//     //         public void actionPerformed(ActionEvent e) {
-//     //             String email = emailField.getText();
-//     //             String password = new String(passwordField.getPassword());
-//     //             UserData seller = new SellerData("", "", "", "");
-                
-//     //             // Placeholder login validation (replace with real validation)
-//     //             if (seller.login(email, password)) {
-//     //                 messageLabel.setText("Login successful!");
-//     //             } else {
-//     //                 messageLabel.setText("Invalid email or password.");
-//     //             }
-                
-//     //         }
-//     //     });
-        
-//     //     // Show Frame
-//     //     frame.setLocationRelativeTo(null);
-//     //     frame.setVisible(true);
-//     // }
-
-    
-// }
-
-
-
-
-
 import java.awt.*;
 import javax.swing.*;
 
@@ -194,9 +107,10 @@ public class CustomerAuthGUI {
                 phoneField.getText().isEmpty() || emailField.getText().isEmpty() ||
                 passwordField.getPassword().length == 0) {
                 JOptionPane.showMessageDialog(frame, "All fields must be filled!", "Error", JOptionPane.ERROR_MESSAGE);
-            }//else {
-            //     registerMessageLabel.setText("Registration successful!");
-            // }
+            }
+            else {
+                registerMessageLabel.setText("Registration successful!");
+            }
             s.register(firstNameField.getText(), lastNameField.getText(), emailField.getText(), new String(passwordField.getPassword()));
             
         });

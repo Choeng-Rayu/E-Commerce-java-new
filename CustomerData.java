@@ -17,12 +17,6 @@ public class CustomerData extends UserData {
     }
     @Override
     public void register(String firstName, String lastName, String email, String password) {
-        for (CustomerData c : cd) {
-            if (c.email.equals(email)) {
-                System.out.println("Sign-up failed. Email already exists.");
-                return; // Exit the method if email already exists
-            }
-        }
         CustomerData newc = new CustomerData(firstName, lastName, email, password);
         cd.add(newc);
         System.out.println("Please login again for this new account " + firstName + " " + lastName + "!");
