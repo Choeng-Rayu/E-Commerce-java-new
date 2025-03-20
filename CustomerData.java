@@ -1,5 +1,11 @@
 import java.util.ArrayList;
 import java.util.Scanner;
+import javax.swing.*;
+import javax.swing.table.DefaultTableModel;
+
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.BorderLayout;
 
 public class CustomerData extends UserData {
     int id;
@@ -14,12 +20,22 @@ public class CustomerData extends UserData {
     public CustomerData(String firstName, String lastName, String email, String password) {
         super(firstName, lastName, email, password);
         this.id = ++totalcd;
+        
     }
     @Override
     public void register(String firstName, String lastName, String email, String password) {
         CustomerData newc = new CustomerData(firstName, lastName, email, password);
+        for (CustomerData c : cd) {
+            if (c.email.equals(email)) {
+                //System.out.println("Sign-up failed. Email already exists.");
+                JOptionPane.showMessageDialog(null, "Sign-up failed. Email already exists.");
+                return; // Exit the method if email already exists
+            }
+        }
         cd.add(newc);
-        System.out.println("Please login again for this new account " + firstName + " " + lastName + "!");
+        DatabaseHandler.insertCustomer(newc);
+        JOptionPane.showMessageDialog(null, "Registration successful!");
+        //System.out.println("Please login again for this new account " + firstName + " " + lastName + "!");
     }
 
     @Override
@@ -61,16 +77,39 @@ public class CustomerData extends UserData {
 
     public void displayAllCustomers() {
         if (cd.isEmpty()) {
-            System.out.println("No Customer Accounts!");
+            JOptionPane.showMessageDialog(null, "No Customer Accounts!");
             return;
         }
+
+        // Create a JFrame for the GUI
+        JFrame frame = new JFrame("Customer List");
+        frame.setSize(1000, 400); // Adjusted size to accommodate more columns
+        frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        frame.setLocationRelativeTo(null);
+
+        // Create a table model with columns
+        String[] columns = {"No", "ID", "First Name", "Last Name", "Password", "Email", "Date of Registered"};
+        DefaultTableModel model = new DefaultTableModel(columns, 0);
+
+        // Populate the table model with customer data
         int i = 0;
-        System.out.printf("%-5s %-9s %-16s %-13s %-13s %-13s %-20s\n", "No", "ID", "First Name", "Last Name", "Password", "Email", "Date of Registered");
-        System.out.println("-----------------------------------------------------------------------");
         for (CustomerData c : cd) {
-            System.out.printf("%-3d %-3s %-5d %-2s %-12s %-2s %-10s %-2s %-10s %-2s %-25s %-2s %-25s\n", i, "|", c.id, "|", c.firstName, "|", c.lastName, "|", c.getPassword(), "|", c.email, "|", c.dateRegister);
+            Object[] row = {i, c.id, c.firstName, c.lastName, c.getPassword(), c.email, c.dateRegister};
+            model.addRow(row);
             i++;
         }
+
+        // Create a JTable with the populated model
+        JTable table = new JTable(model);
+        table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION); // Allow only one row to be selected
+        table.setRowHeight(25); // Set row height for better visibility
+
+        // Add the table to a scroll pane
+        JScrollPane scrollPane = new JScrollPane(table);
+        frame.add(scrollPane, BorderLayout.CENTER);
+
+        // Make the frame visible
+        frame.setVisible(true);
     }
 
     public static int getTotalCustomer() {
@@ -89,96 +128,127 @@ public class CustomerData extends UserData {
         return "Not Found";
     }
 
-    public void customerManagement() {
-        Scanner sc = new Scanner(System.in);
-        boolean customerManagement = true;
-        while (customerManagement) {
-            try {
-                System.out.println("\n==== CUSTOMER MANAGEMENT ====");
-                System.out.println("0. Exit");
-                System.out.println("1. Back to Previous Menu");
-                System.out.println("2. Show all Customers");
-                System.out.println("3. Search Customers");
-                System.out.println("4. Delete Customer");
-                System.out.println("5. Modify account");
-                System.out.println("6. Modify Password");
-                System.out.println("7. Get report");
-                System.out.print("Choose an option: ");
-                String choice = sc.nextLine();
-                NumberOnlyException.validateNumber(choice, "^[0-9]+$");
-                int choice2 = Integer.parseInt(choice);
-                switch (choice2) {
-                    case 0 -> {
-                        System.out.println("You were Exit the program!");
-                        System.exit(0);
-                    }
-                    case 1 -> {
-                        customerManagement = false;
-                        break;
-                    }
-                    case 2 -> {
-                        if (cd.isEmpty()) {
-                            System.out.println("No Customer Accounts!");
-                            break;
-                        }
-                        displayAllCustomers();
-                        break;
-                    }
-                    case 3 -> {
-                        if (cd.isEmpty()) {
-                            System.out.println("No Customer Accounts!");
-                            break;
-                        }
-                        System.out.println("Enter Email to verify: ");
-                        String emailInput = sc.nextLine();
-                        checkProfile(emailInput);
-                        break;
-                    }
-                    case 4 -> {
-                        if (cd.isEmpty()) {
-                            System.out.println("No Customer Accounts!");
-                            break;
-                        }
-                        displayAllCustomers();
-                        deleteCustomer();
-                        break;
-                    }
-                    case 5 -> {
-                        if (cd.isEmpty()) {
-                            System.out.println("No Customer Accounts!");
-                            break;
-                        }
-                        System.out.print("Enter email: ");
-                        String emailInput = sc.nextLine();
-                        System.out.print("Enter password: ");
-                        String passwordInput = sc.nextLine();
-                        modifyAccount(emailInput, passwordInput);
-                        break;
-                    }
-                    case 6 -> {
-                        if (cd.isEmpty()) {
-                            System.out.println("No Customer Accounts!");
-                            break;
-                        }
-                        System.out.print("Enter email: ");
-                        String emailInput = sc.nextLine();
-                        System.out.print("Enter password: ");
-                        String passwordInput = sc.nextLine();
-                        modifyPasswordString(emailInput, passwordInput);
-                        break;
-                    }
-                    case 7 -> {
-                        System.out.println(getTotalCustomer());
-                        break;
-                    }
-                    default -> System.out.println("Invalid choice. Try again.");
-                }
-            } catch (NumberOnlyException e) {
-                System.err.println(e.getMessage());
-            }
-        }
-    }
+  
 
+    public void customerManagement() {
+        // Create a JFrame for the GUI
+        JFrame frame = new JFrame("Customer Management");
+        frame.setSize(400, 300);
+        frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        frame.setLocationRelativeTo(null);
+
+        // Create a JPanel to hold the buttons
+        JPanel panel = new JPanel();
+        panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
+
+        // Create buttons for each option
+        JButton exitButton = new JButton("0. Exit");
+        JButton backButton = new JButton("1. Back to Previous Menu");
+        JButton showAllButton = new JButton("2. Show all Customers");
+        JButton searchButton = new JButton("3. Search Customers");
+        JButton deleteButton = new JButton("4. Delete Customer");
+        JButton modifyAccountButton = new JButton("5. Modify Account");
+        JButton modifyPasswordButton = new JButton("6. Modify Password");
+        JButton getReportButton = new JButton("7. Get Report");
+
+        // Add buttons to the panel
+        panel.add(exitButton);
+        panel.add(backButton);
+        panel.add(showAllButton);
+        panel.add(searchButton);
+        panel.add(deleteButton);
+        panel.add(modifyAccountButton);
+        panel.add(modifyPasswordButton);
+        panel.add(getReportButton);
+
+        // Add action listeners to buttons
+        exitButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                JOptionPane.showMessageDialog(frame, "You have exited the program!");
+                System.exit(0);
+            }
+        });
+
+        backButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                frame.dispose(); // Close the current window
+            }
+        });
+
+        showAllButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if (cd.isEmpty()) {
+                    JOptionPane.showMessageDialog(frame, "No Customer Accounts!");
+                } else {
+                    displayAllCustomers();
+                }
+            }
+        });
+
+        searchButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if (cd.isEmpty()) {
+                    JOptionPane.showMessageDialog(frame, "No Customer Accounts!");
+                } else {
+                    String emailInput = JOptionPane.showInputDialog(frame, "Enter Email to verify:");
+                    checkProfile(emailInput);
+                }
+            }
+        });
+
+        deleteButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if (cd.isEmpty()) {
+                    JOptionPane.showMessageDialog(frame, "No Customer Accounts!");
+                } else {
+                    displayAllCustomers();
+                    deleteCustomer();
+                }
+            }
+        });
+
+        modifyAccountButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if (cd.isEmpty()) {
+                    JOptionPane.showMessageDialog(frame, "No Customer Accounts!");
+                } else {
+                    String emailInput = JOptionPane.showInputDialog(frame, "Enter email:");
+                    String passwordInput = JOptionPane.showInputDialog(frame, "Enter password:");
+                    modifyAccount(emailInput, passwordInput);
+                }
+            }
+        });
+
+        modifyPasswordButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if (cd.isEmpty()) {
+                    JOptionPane.showMessageDialog(frame, "No Customer Accounts!");
+                } else {
+                    String emailInput = JOptionPane.showInputDialog(frame, "Enter email:");
+                    String passwordInput = JOptionPane.showInputDialog(frame, "Enter password:");
+                    modifyPasswordString(emailInput, passwordInput);
+                }
+            }
+        });
+
+        getReportButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                JOptionPane.showMessageDialog(frame, "Total Customers: " + getTotalCustomer());
+            }
+        });
+
+        // Add the panel to the frame and make it visible
+        frame.add(panel);
+        frame.setVisible(true);
+    }
     public static void main(String[] args) {
         CustomerData c = new CustomerData("1", "1", "1", "1");
         c.register("1", "1", "1", "1");
@@ -186,135 +256,185 @@ public class CustomerData extends UserData {
     }
 
     public void menuCustomer() {
-        boolean menuCustomer = true;
-        Scanner scanner = new Scanner(System.in);
-        while (menuCustomer) {
-            try  {
-                System.out.println("\n==== CUSTOMER ====");
-                System.out.println("0. Exit");
-                System.out.println("1. Login");
-                System.out.println("2. Register");
-                System.out.println("3. Back to Previous Menu");
-                System.out.print("Choose an option: ");
-                String choice = scanner.nextLine();
-                NumberOnlyException.validateNumber(choice, "^[0-9]+$");
-                int choice2 = Integer.parseInt(choice);
-                switch (choice2) {
-                    case 0 -> {
-                        System.out.println("Exiting...");
-                        System.exit(0);
-                    }
-                    case 1 -> {
-                        System.out.print("Enter email: ");
-                        String emailInput = scanner.nextLine();
-                        System.out.print("Enter password: ");
-                        String passwordInput = scanner.nextLine();
-                        if (login(emailInput, passwordInput)) {
-                            menu();
-                        }
-                        break;
-                    }
-                    case 2 -> {
-                        System.out.print("Enter first name: ");
-                        String firstNameInput = scanner.nextLine();
-                        System.out.print("Enter last name: ");
-                        String lastNameInput = scanner.nextLine();
-                        System.out.print("Enter email: ");
-                        String emailInput = scanner.nextLine();
-                        System.out.print("Enter password: ");
-                        String passwordInput = scanner.nextLine();
-                        register(firstNameInput, lastNameInput, emailInput, passwordInput);
-                        break;
-                    }
-                    case 3 -> {
-                        menuCustomer = false;
-
-                        break;
-                    }
-                    default -> System.out.println("Invalid choice. Try again.");
-                }
-            } catch (NumberOnlyException e) {
-                System.err.println(e.getMessage());
+        // Create a JFrame for the GUI
+        JFrame frame = new JFrame("Customer Menu");
+        frame.setSize(400, 300);
+        frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        frame.setLocationRelativeTo(null);
+    
+        // Create a JPanel to hold the buttons
+        JPanel panel = new JPanel();
+        panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
+    
+        // Create buttons for each option
+        JButton exitButton = new JButton("0. Exit");
+        JButton loginButton = new JButton("1. Login");
+        JButton registerButton = new JButton("2. Register");
+        JButton backButton = new JButton("3. Back to Previous Menu");
+    
+        // Add buttons to the panel
+        panel.add(exitButton);
+        panel.add(loginButton);
+        panel.add(registerButton);
+        panel.add(backButton);
+    
+        // Add action listeners to buttons
+        exitButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                JOptionPane.showMessageDialog(frame, "Exiting...");
+                System.exit(0);
             }
-        }
+        });
+    
+        loginButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                // Input fields for login
+                String emailInput = JOptionPane.showInputDialog(frame, "Enter email:");
+                String passwordInput = JOptionPane.showInputDialog(frame, "Enter password:");
+    
+                if (emailInput != null && passwordInput != null) {
+                    if (login(emailInput, passwordInput)) {
+                        menu(); // Call the menu function if login is successful
+                    } else {
+                        JOptionPane.showMessageDialog(frame, "Login failed. Please try again.");
+                    }
+                }
+            }
+        });
+    
+        registerButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                // Input fields for registration
+                String firstNameInput = JOptionPane.showInputDialog(frame, "Enter first name:");
+                String lastNameInput = JOptionPane.showInputDialog(frame, "Enter last name:");
+                String emailInput = JOptionPane.showInputDialog(frame, "Enter email:");
+                String passwordInput = JOptionPane.showInputDialog(frame, "Enter password:");
+    
+                if (firstNameInput != null && lastNameInput != null && emailInput != null && passwordInput != null) {
+                    register(firstNameInput, lastNameInput, emailInput, passwordInput);
+                }
+            }
+        });
+    
+        backButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                frame.dispose(); // Close the current window
+            }
+        });
+    
+        // Add the panel to the frame and make it visible
+        frame.add(panel);
+        frame.setVisible(true);
     }
-
+    
     public void menu() {
-        boolean menuRole = true;
-        Scanner scanner = new Scanner(System.in);
-        while (menuRole) {
-            try {
-                System.out.println("\n==== CUSTOMER ====");
-                System.out.println("0. Exit");
-                System.out.println("1. Check Profile Account");
-                System.out.println("2. Modify Account");
-                System.out.println("3. Modify Password");
-                System.out.println("4. Shopping");
-                System.out.println("5. Log out");
-                System.out.print("Choose an option: ");
-                String choice = scanner.nextLine();
-                NumberOnlyException.validateNumber(choice, "^[0-9]+$");
-                int choice2 = Integer.parseInt(choice);
-                switch (choice2) {
-                    case 0 -> {
-                        System.out.println("Exiting...");
-                        System.exit(0);
-                    }
-                    case 1 -> {
-                        //System.out.print("Please enter email again to verify: ");
-                        //String emailInput = scanner.nextLine();
-                        //System.out.println(checkProfile(emailInput));
-                        //System.out.println(toString());
-                        System.out.print("Please enter email again to verify: ");
-                        String emailInput = scanner.nextLine();
-                        System.out.println(checkProfile(emailInput));
-                        break;
-                    }
-                    case 2 -> {
-                        System.out.print("Enter email: ");
-                        String emailInput = scanner.nextLine();
-                        System.out.print("Enter password: ");
-                        String passwordInput = scanner.nextLine();
-                        modifyAccount(emailInput, passwordInput);
-                        break;
-                    }
-                    case 3 -> {
-                        System.out.print("Enter email: ");
-                        String emailInput = scanner.nextLine();
-                        System.out.print("Enter password: ");
-                        String passwordInput = scanner.nextLine();
-                        modifyPasswordString(emailInput, passwordInput);
-                        break;
-                    }
-                    case 4 -> {
-                        //Product p = new Product(0, "", 0, 0, "");
-                        AddToCart cart = new AddToCart(0, "", 0, 0, "");
-                        cart.menuShopping();
-                        break;
-                    }
-                    case 5 -> {
-                        if(AddToCart.CartisEmpty()){
-                            menuRole = false;
-                        }else{
-                            System.out.println("Warning! Your cart will not save when you lug out the account! ");
-                            System.out.println("Are you sure?\nEnter (yes) to continoue: ");
-                            Scanner s = new Scanner(System.in);
-                            String input = s.nextLine();
-                            if(AddToCart.logoutClearCart(input)){
-                                System.out.println("Your cart was cleared!");
-                                menuRole = false;
-                            }else{
-                                System.out.println("Your cart was not cleared!");
-                            }
-                        }
-                        
-                        break;
-                    }
-                    default -> System.out.println("Invalid choice. Try again.");
-                }
-            } catch (NumberOnlyException e) {
-                System.err.println(e.getMessage());
+        // Create a JFrame for the GUI
+        JFrame frame = new JFrame("Customer Menu");
+        frame.setSize(400, 350);
+        frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        frame.setLocationRelativeTo(null);
+
+        // Create a JPanel to hold the buttons
+        JPanel panel = new JPanel();
+        panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
+
+        // Create buttons for each option
+        JButton exitButton = new JButton("0. Exit");
+        JButton checkProfileButton = new JButton("1. Check Profile Account");
+        JButton modifyAccountButton = new JButton("2. Modify Account");
+        JButton modifyPasswordButton = new JButton("3. Modify Password");
+        JButton shoppingButton = new JButton("4. Shopping");
+        JButton logoutButton = new JButton("5. Log out");
+
+        // Add buttons to the panel
+        panel.add(exitButton);
+        panel.add(checkProfileButton);
+        panel.add(modifyAccountButton);
+        panel.add(modifyPasswordButton);
+        panel.add(shoppingButton);
+        panel.add(logoutButton);
+
+        // Add action listeners to buttons
+        exitButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                JOptionPane.showMessageDialog(frame, "Exiting...");
+                System.exit(0);
             }
-        }
+        });
+
+        checkProfileButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                String emailInput = JOptionPane.showInputDialog(frame, "Please enter email again to verify:");
+                if (emailInput != null) {
+                    String profileInfo = checkProfile(emailInput);
+                    JOptionPane.showMessageDialog(frame, profileInfo);
+                }
+            }
+        });
+
+        modifyAccountButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                String emailInput = JOptionPane.showInputDialog(frame, "Enter email:");
+                String passwordInput = JOptionPane.showInputDialog(frame, "Enter password:");
+                if (emailInput != null && passwordInput != null) {
+                    modifyAccount(emailInput, passwordInput);
+                    JOptionPane.showMessageDialog(frame, "Account modified successfully!");
+                }
+            }
+        });
+
+        modifyPasswordButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                String emailInput = JOptionPane.showInputDialog(frame, "Enter email:");
+                String passwordInput = JOptionPane.showInputDialog(frame, "Enter password:");
+                if (emailInput != null && passwordInput != null) {
+                    modifyPasswordString(emailInput, passwordInput);
+                    JOptionPane.showMessageDialog(frame, "Password modified successfully!");
+                }
+            }
+        });
+
+        shoppingButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                AddToCart cart = new AddToCart(0, "", 0, 0, "");
+                cart.menuShopping(); // Open the shopping menu
+            }
+        });
+
+        logoutButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if (AddToCart.CartisEmpty()) {
+                    frame.dispose(); // Close the current window
+                } else {
+                    int confirm = JOptionPane.showConfirmDialog(
+                        frame,
+                        "Warning! Your cart will not save when you log out of the account!\nAre you sure?",
+                        "Confirm Logout",
+                        JOptionPane.YES_NO_OPTION
+                    );
+                    if (confirm == JOptionPane.YES_OPTION) {
+                        AddToCart.logoutClearCart("yes"); // Clear the cart
+                        JOptionPane.showMessageDialog(frame, "Your cart was cleared!");
+                        frame.dispose(); // Close the current window
+                    } else {
+                        JOptionPane.showMessageDialog(frame, "Your cart was not cleared!");
+                    }
+                }
+            }
+        });
+
+        // Add the panel to the frame and make it visible
+        frame.add(panel);
+        frame.setVisible(true);
     }
 }

@@ -1,54 +1,70 @@
-import java.util.Scanner;
+import javax.swing.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 public class Main_project {
     public static void main(String[] args) {
-        Scanner scanner = new Scanner(System.in);
+        // Initialize user data
         UserData seller = new SellerData("rayu", "rayu", "choengrayu@gmail.com", "12345");
         seller.register("rayu", "rayu", "choengrayu@gmail.com", "12345");
         UserData customer = new CustomerData("", "", "", "");
-        UserData amind = new AdminExtends();
-        UserData[] users = {seller, customer, amind};
-        // while (true) {
-        //     try{    
-        //         System.out.println("\n==== WELCOME TO OUR E-COMMERCE SYSTEM ====");
-        //         System.out.println("0. Exit");
-        //         System.out.println("1. For Customer");
-        //         System.out.println("2. For Seller");
-        //         System.out.println("3. For Admin");
-        //         System.out.print("Choose an option: ");
-        //         String input = scanner.nextLine();
-        //         NumberOnlyException.validateNumber(input, "^[0-9]*$");
-        //         int choice = Integer.parseInt(input);
+        UserData admin = new AdminExtends();
+        UserData[] users = {seller, customer, admin};
 
-        //         switch (choice) {
-        //             case 0 -> {
-        //                 System.out.println("Exited successfully");
-        //                 scanner.close();
-        //                 System.exit(0);
-        //             }
-        //             case 1 -> {
-        //                 ((CustomerData) users[1]).menuCustomer();
-        //                 break;
-        //             }
-        //             case 2 -> {
-        //                 ((SellerData) users[0]).menuSeller();
-        //                 break;
-        //             }
-        //             case 3 -> {
-        //                 //((AdminExtends) amind).adminLogIn(); the same as below
-        //                 ((AdminExtends) users[2]).adminLogIn();
-        //                 break;
-        //             }
-        //             default -> System.out.println("Invalid choice. Try again.");
-        //         }
-        //     }catch(NumberOnlyException e){
-        //         System.out.println(e.getMessage());
-        //     }
-        // }
-        
-        GUI.LoginGUI();
+        // Create a JFrame for the main menu
+        JFrame frame = new JFrame("E-Commerce System");
+        frame.setSize(400, 300);
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setLocationRelativeTo(null);
 
+        // Create a JPanel to hold the buttons
+        JPanel panel = new JPanel();
+        panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
 
+        // Create buttons for each option
+        JButton exitButton = new JButton("0. Exit");
+        JButton customerButton = new JButton("1. For Customer");
+        JButton sellerButton = new JButton("2. For Seller");
+        JButton adminButton = new JButton("3. For Admin");
+
+        // Add buttons to the panel
+        panel.add(exitButton);
+        panel.add(customerButton);
+        panel.add(sellerButton);
+        panel.add(adminButton);
+
+        // Add action listeners to buttons
+        exitButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                JOptionPane.showMessageDialog(frame, "Exiting...");
+                System.exit(0);
+            }
+        });
+
+        customerButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                ((CustomerData) users[1]).menuCustomer(); // Open the customer menu
+            }
+        });
+
+        sellerButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                ((SellerData) users[0]).menuSeller(); // Open the seller menu
+            }
+        });
+
+        adminButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                ((AdminExtends) users[2]).adminLogIn(); // Open the admin login menu
+            }
+        });
+
+        // Add the panel to the frame and make it visible
+        frame.add(panel);
+        frame.setVisible(true);
     }
 }
-
