@@ -3,7 +3,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class DatabaseHandler {
-    private static final String URL = "jdbc:mysql://localhost:3306/E_COMMERCE_PROJECT";
+    private static final String URL = "jdbc:mysql://localhost:3306/E_COMMERCE_PROJECT_RAYU_JAVA";
     private static final String USER = "root";
     private static final String PASSWORD = "rayu$@mySQL";
 
@@ -16,16 +16,16 @@ public class DatabaseHandler {
 
     // Insert new customer
     public static String insertCustomer(CustomerData customer) {
-        String sql = "INSERT INTO customers (first_name, last_name, email, password, date_registered) VALUES (?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO customers (id, first_name, last_name, email, password, date_registered) VALUES (?, ?, ?, ?, ?, ?)";
         
         try (Connection conn = getConnection();
                 PreparedStatement stmt = conn.prepareStatement(sql)) {
-            
-            stmt.setString(1, customer.firstName);
-            stmt.setString(2, customer.lastName);
-            stmt.setString(3, customer.email);
-            stmt.setString(4, customer.getPassword());
-            stmt.setTimestamp(5, Timestamp.valueOf(customer.dateRegister));
+            stmt.setInt(1, customer.id);
+            stmt.setString(2, customer.firstName);
+            stmt.setString(3, customer.lastName);
+            stmt.setString(4, customer.email);
+            stmt.setString(5, customer.getPassword());
+            stmt.setTimestamp(6, Timestamp.valueOf(customer.dateRegister));
             
             int rowsAffected = stmt.executeUpdate();
             return rowsAffected > 0 ? "Customer inserted successfully!" : "Failed to insert customer.";
@@ -100,16 +100,16 @@ public class DatabaseHandler {
 
     // Insert new seller
     public static String insertSeller(SellerData seller) {
-        String sql = "INSERT INTO sellers (first_name, last_name, email, password, date_registered) VALUES (?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO sellers (id, first_name, last_name, email, password, date_registered) VALUES (?, ?, ?, ?, ?, ?)";
         
         try (Connection conn = getConnection();
                 PreparedStatement stmt = conn.prepareStatement(sql)) {
-            
-            stmt.setString(1, seller.firstName);
-            stmt.setString(2, seller.lastName);
-            stmt.setString(3, seller.email);
-            stmt.setString(4, seller.getPassword());
-            stmt.setTimestamp(5, Timestamp.valueOf(seller.dateRegister));
+            stmt.setInt(1, seller.id);
+            stmt.setString(2, seller.firstName);
+            stmt.setString(3, seller.lastName);
+            stmt.setString(4, seller.email);
+            stmt.setString(5, seller.getPassword());
+            stmt.setTimestamp(6, Timestamp.valueOf(seller.dateRegister));
             
             int rowsAffected = stmt.executeUpdate();
             return rowsAffected > 0 ? "Seller inserted successfully!" : "Failed to insert seller.";
@@ -184,16 +184,16 @@ public class DatabaseHandler {
 
     // Insert new product
     public static String insertProduct(Product product) {
-        String sql = "INSERT INTO products (name, price, quantity, push_by, date_pushed) VALUES (?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO products (id, name, price, quantity, push_by, date_pushed) VALUES (?, ?, ?, ?, ?, ?)";
         
         try (Connection conn = getConnection();
                 PreparedStatement stmt = conn.prepareStatement(sql)) {
-            
-            stmt.setString(1, product.name);
-            stmt.setDouble(2, product.price);
-            stmt.setInt(3, product.quantity);
-            stmt.setString(4, product.pushBy);
-            stmt.setTimestamp(5, Timestamp.valueOf(product.datePush));
+            stmt.setInt(1, product.id);
+            stmt.setString(2, product.name);
+            stmt.setDouble(3, product.price);
+            stmt.setInt(4, product.quantity);
+            stmt.setString(5, product.pushBy);
+            stmt.setTimestamp(6, Timestamp.valueOf(product.datePush));
             
             int rowsAffected = stmt.executeUpdate();
             return rowsAffected > 0 ? "Product inserted successfully!" : "Failed to insert product.";
@@ -219,6 +219,8 @@ public class DatabaseHandler {
                     rs.getDouble("price"),
                     rs.getInt("quantity"),
                     rs.getString("push_by")
+                    //rs.getTimestamp("date_pushed")
+                    //rs.getString("date_pushed")
                 ));
             }
         } catch (SQLException e) {

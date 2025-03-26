@@ -1,13 +1,12 @@
-import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import javax.swing.*;
 
 public class Main_project {
     public static void main(String[] args) {
         // Initialize user data
-        UserData seller = new SellerData("rayu", "rayu", "choengrayu@gmail.com", "12345");
-        seller.register("rayu", "rayu", "choengrayu@gmail.com", "12345");
-        UserData customer = new CustomerData("", "", "", "");
+        UserData seller = new SellerData();
+        UserData customer = new CustomerData();
         UserData admin = new AdminExtends();
         UserData[] users = {seller, customer, admin};
 

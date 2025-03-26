@@ -68,8 +68,7 @@ public class AdminExtends extends UserData {
             public void actionPerformed(ActionEvent e) {
                 String emailInput = JOptionPane.showInputDialog(frame, "Enter Admin's email to verify:");
                 if (emailInput != null) {
-                    AdminExtends ad = new AdminExtends();
-                    ad.checkProfile(emailInput);
+                    //impletment the meethod to check the profile when you see this command
                 }
             }
         });
@@ -80,8 +79,7 @@ public class AdminExtends extends UserData {
                 String emailInput = JOptionPane.showInputDialog(frame, "Enter Admin's email:");
                 String passwordInput = JOptionPane.showInputDialog(frame, "Enter Admin's password:");
                 if (emailInput != null && passwordInput != null) {
-                    AdminExtends ad = new AdminExtends();
-                    ad.modifyAccount(emailInput, passwordInput);
+                    //impletment the method to modify the account when you see this command
                 }
             }
         });
@@ -92,8 +90,7 @@ public class AdminExtends extends UserData {
                 String emailInput = JOptionPane.showInputDialog(frame, "Enter Admin's email:");
                 String passwordInput = JOptionPane.showInputDialog(frame, "Enter Admin's password:");
                 if (emailInput != null && passwordInput != null) {
-                    AdminExtends ad = new AdminExtends();
-                    ad.modifyPasswordString(emailInput, passwordInput);
+                    //impletment the to modify password when you see this command
                 }
             }
         });
@@ -130,12 +127,10 @@ public class AdminExtends extends UserData {
     public boolean login(String email, String password) {
         
             if (email.equals(this.email) && password.equals(this.getPassword())) {
-                //System.out.println("Login Successful! Welcome, " + this.firstName + " " + this.lastName + "!");
                 JOptionPane.showMessageDialog(null, "Login Successful! Welcome, " + this.firstName + " " + this.lastName + "!");
                 return true;
             }
         JOptionPane.showMessageDialog(null, "Login failed. Incorrect email or password.");
-        //        System.out.println("Login failed. Incorrect email or password.");
         return false;
     }
     public void adminLogIn() {
