@@ -457,6 +457,7 @@ public class Product {
         });
     
         backButton.addActionListener(e -> frame.dispose());
+        //searchByIdButton.addActionListener(events )
     
         frame.add(panel);
         frame.setVisible(true);
