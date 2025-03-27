@@ -8,11 +8,10 @@ public class DatabaseHandler {
     private static final String PASSWORD = "rayu$@mySQL";
 
     // Connection management
-    private static Connection getConnection() throws SQLException {
+    public static Connection getConnection() throws SQLException {
         return DriverManager.getConnection(URL, USER, PASSWORD);
     }
-
-    // Customer Operations
+    
 
     // Insert new customer
     public static String insertCustomer(CustomerData customer) {
@@ -291,5 +290,86 @@ public class DatabaseHandler {
             return "Error: " + e.getMessage();
         }
     }
+
+    // Method to load all products with all attributes
+public static List<Product> loadAllProduct() {
+    List<Product> products = new ArrayList<>();
+    //String sql = "SELECT id, name, price, quantity, push_by, date_pushed FROM products";
+    String sql = "SELECT id, name, price, quantity, push_by, date_pushed FROM products";
+    
+    try (Connection conn = getConnection();
+            Statement stmt = conn.createStatement();
+            ResultSet rs = stmt.executeQuery(sql)) {
+        
+        while (rs.next()) {
+            Product product = new Product(
+                rs.getInt("id"),
+                rs.getString("name"),
+                rs.getDouble("price"),
+                rs.getInt("quantity"),
+                
+                rs.getString("push_by"),
+                rs.getString("date_pushed")
+            );
+            // Assuming your Product class has setDatePush method
+            //product.setDatePush(rs.getTimestamp("date_pushed").toLocalDateTime());
+            products.add(product);
+        }
+    } catch (SQLException e) {
+        e.printStackTrace();
+    }
+    return products;
+}
+
+// Method to load all sellers with all attributes including id and date_registered
+public static List<SellerData> loadAllSeller() {
+    List<SellerData> sellers = new ArrayList<>();
+    String sql = "SELECT id, first_name, last_name, email, password, date_registered FROM sellers";
+    
+    try (Connection conn = getConnection();
+            Statement stmt = conn.createStatement();
+            ResultSet rs = stmt.executeQuery(sql)) {
+        
+        while (rs.next()) {
+            SellerData seller = new SellerData(
+                rs.getInt("id"),
+                rs.getString("first_name"),
+                rs.getString("last_name"),
+                rs.getString("email"),
+                rs.getString("password")
+            );
+            sellers.add(seller);
+        }
+    } catch (SQLException e) {
+        e.printStackTrace();
+    }
+    return sellers;
+}
+
+// Method to load all customers with all attributes including id and date_registered
+public static List<CustomerData> loadAllCustomer() {
+    List<CustomerData> customers = new ArrayList<>();
+    String sql = "SELECT id, first_name, last_name, email, password, date_registered FROM customers";
+    
+    try (Connection conn = getConnection();
+            Statement stmt = conn.createStatement();
+            ResultSet rs = stmt.executeQuery(sql)) {
+        
+        while (rs.next()) {
+            CustomerData customer = new CustomerData(
+                rs.getInt("id"),
+                rs.getString("first_name"),
+                rs.getString("last_name"),
+                rs.getString("email"),
+                rs.getString("password")
+                
+            );
+            customers.add(customer);
+        }
+    } catch (SQLException e) {
+        e.printStackTrace();
+    }
+    return customers;
+}
 
 }

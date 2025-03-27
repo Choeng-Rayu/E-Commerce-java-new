@@ -1,4 +1,5 @@
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Scanner;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -14,6 +15,7 @@ import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.ListSelectionModel;
 import javax.swing.table.DefaultTableModel;
+import javax.xml.crypto.Data;
 
 public class SellerData extends UserData {
     public static int totalseller = 0;
@@ -30,7 +32,21 @@ public class SellerData extends UserData {
         super(firstName, lastName, email, password);
         this.id = ++totalseller;
     }
-
+    // Constructor to match the required parameters
+    public SellerData(int id, String firstName, String lastName, String email, String password) {
+        
+        super(firstName, lastName, email, password);
+        this.id = id;
+        //this.dateRegistered = dateRegistered;
+    }
+    public static ArrayList<SellerData> getSellers(){
+        return sellers;
+    }
+    public static void loadSellersIntoStaticList() {
+        List<SellerData> allSellers = DatabaseHandler.loadAllSeller();
+        sellers.clear(); // Clear existing entries (if any)
+        sellers.addAll(allSellers); // Copy all products from DB to static list
+    }
     @Override
     public void modifyAccount(String email, String passwordInputString) {
         // Iterate through the list of sellers to find the matching account
@@ -78,9 +94,12 @@ public class SellerData extends UserData {
         }
         System.out.println("Incorrect email or password");
     }
+    
+    
 
     @Override
     public boolean login(String email, String password) {
+        
         for (SellerData seller : sellers) {
             if (seller.email.equals(email) && seller.getPassword().equals(password)) {
                 System.out.println("Login Successful! Welcome, " + seller.firstName + " " + seller.lastName + "!");
@@ -109,7 +128,6 @@ public class SellerData extends UserData {
         JOptionPane.showMessageDialog(null, "Sign-up successful! Please login again for this account, " 
                                            + newSeller.firstName + " " + newSeller.lastName + "\n" + result);
     }
-
     @Override
     public String toString() {
         return "Seller ID: " + id + "\nFirst Name: " + firstName + "\nLast Name: " + lastName +

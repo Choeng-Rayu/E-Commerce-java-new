@@ -1,9 +1,11 @@
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Scanner;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.time.LocalDateTime;
 import java.awt.BorderLayout;
 
 public class CustomerData extends UserData {
@@ -16,11 +18,17 @@ public class CustomerData extends UserData {
     public CustomerData() {
     }
 
+    public CustomerData(int id, String firstName, String lastName, String email, String password, String dateRegistered) {
+        super(firstName, lastName, email, password);
+        this.id = id;
+        this.dateRegister = dateRegistered;
+    }
     // Constructor (initializes the object)
     public CustomerData(String firstName, String lastName, String email, String password) {
         super(firstName, lastName, email, password);
         this.id = ++totalcd;
     }
+
 
     @Override
     public void register(String firstName, String lastName, String email, String password) {
@@ -37,7 +45,16 @@ public class CustomerData extends UserData {
         String result = DatabaseHandler.insertCustomer(newCustomer);
         JOptionPane.showMessageDialog(null, result);
     }
-
+    // Add a new constructor to match the required arguments
+    public CustomerData(int id, String firstName, String lastName, String email, String password) {
+        super(firstName, lastName, email, password);
+        this.id = id;    
+    }
+    public static void loadCustomersIntoStaticList() {
+        List<CustomerData> customers = DatabaseHandler.loadAllCustomer();
+        cd.clear(); // Clear existing entries (if any)
+        cd.addAll(customers); // Copy all products from DB to static list
+    }
     @Override
     public boolean login(String email, String passwordInput) {
         // First, check the local list of customers

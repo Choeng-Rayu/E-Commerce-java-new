@@ -1,7 +1,13 @@
+import java.awt.BorderLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.List;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -13,11 +19,6 @@ import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.ListSelectionModel;
 import javax.swing.table.DefaultTableModel;
-import java.awt.BorderLayout;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
 
 public class Product {
     public int id;
@@ -30,6 +31,7 @@ public class Product {
     public double totalMoneyForPay = 0;
     
     public static ArrayList<Product> products = new ArrayList<>();
+    //List<Product> allProducts = DatabaseHandler.loadAllProduct();
     // Associated seller instance (for accessing current password, etc.)
     SellerData seller = new SellerData("", "", "", "");
 
@@ -42,7 +44,20 @@ public class Product {
         this.pushBy = pushBy;
         this.datePush = getCurrentDateTimeInCambodia();
     }
-    
+    public Product(int id, String name, double price, int quantity, String pushBy, String datePush) {
+        this.id = id ;
+        this.name = name;
+        this.price = price;
+        this.quantity = quantity;
+        this.pushBy = pushBy;
+        this.datePush = datePush;
+    }
+
+    public static void loadProductsIntoStaticList() {
+        List<Product> allProducts = DatabaseHandler.loadAllProduct();
+        products.clear(); // Clear existing entries (if any)
+        products.addAll(allProducts); // Copy all products from DB to static list
+    }
     // Admin deletion via GUI with no DB update here (assumed deletion only from local list)
     public void DeleteProductByAdmin() {
         JFrame frame = new JFrame("Delete Product by Admin");
@@ -291,7 +306,8 @@ public class Product {
                     double priceInputDouble = Double.parseDouble(priceInput);
                     NumberOnlyException.validateNumber(quantityInput, "^[0-9]+$");
                     int quantityInputInt = Integer.parseInt(quantityInput);
-                    addProduct(generateIDByProductSize(), nameInput, priceInputDouble, quantityInputInt, SellerData.pushByName);
+                    int idgen = generateIDByProductSize() + 1;
+                    addProduct(idgen, nameInput, priceInputDouble, quantityInputInt, SellerData.pushByName);
                     JOptionPane.showMessageDialog(frame, "Product added successfully!");
                 } catch (NumberOnlyException | DuplicateArgumentException ex) {
                     JOptionPane.showMessageDialog(frame, "Error: " + ex.getMessage());

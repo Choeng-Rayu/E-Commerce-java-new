@@ -9,6 +9,9 @@ public class Main_project {
         UserData customer = new CustomerData();
         UserData admin = new AdminExtends();
         UserData[] users = {seller, customer, admin};
+        CustomerData.loadCustomersIntoStaticList();
+        SellerData.loadSellersIntoStaticList();
+        Product.loadProductsIntoStaticList();
 
         // Create a JFrame for the main menu
         JFrame frame = new JFrame("E-Commerce System");
