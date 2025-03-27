@@ -297,10 +297,11 @@ public class Product {
         addProductButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                String nameInput = JOptionPane.showInputDialog(frame, "Enter product name:");
-                String priceInput = JOptionPane.showInputDialog(frame, "Enter product price:");
-                String quantityInput = JOptionPane.showInputDialog(frame, "Enter product quantity:");
-
+                frame.dispose(); // Add this line to close current frame
+                String nameInput = JOptionPane.showInputDialog(null, "Enter product name:"); // Changed from frame to null
+                String priceInput = JOptionPane.showInputDialog(null, "Enter product price:");
+                String quantityInput = JOptionPane.showInputDialog(null, "Enter product quantity:");
+        
                 try {
                     NumberOnlyException.validateNumber(priceInput, "^[0-9]+(\\.[0-9]+)?$");
                     double priceInputDouble = Double.parseDouble(priceInput);
@@ -308,81 +309,83 @@ public class Product {
                     int quantityInputInt = Integer.parseInt(quantityInput);
                     int idgen = generateIDByProductSize() + 1;
                     addProduct(idgen, nameInput, priceInputDouble, quantityInputInt, SellerData.pushByName);
-                    JOptionPane.showMessageDialog(frame, "Product added successfully!");
+                    JOptionPane.showMessageDialog(null, "Product added successfully!");
                 } catch (NumberOnlyException | DuplicateArgumentException ex) {
-                    JOptionPane.showMessageDialog(frame, "Error: " + ex.getMessage());
+                    JOptionPane.showMessageDialog(null, "Error: " + ex.getMessage());
                 }
             }
         });
-
+        
         modifyProductButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                frame.dispose(); // Add this line
                 if (products.isEmpty()) {
-                    JOptionPane.showMessageDialog(frame, "No Products!");
+                    JOptionPane.showMessageDialog(null, "No Products!");
                     return;
                 }
-                String idInput = JOptionPane.showInputDialog(frame, "Enter product ID to modify:");
+                String idInput = JOptionPane.showInputDialog(null, "Enter product ID to modify:");
                 try {
                     NumberOnlyException.validateNumber(idInput, "^[0-9]+$");
                     int idInputInt = Integer.parseInt(idInput);
                     modifiedProduct(idInputInt);
                 } catch (NumberOnlyException ex) {
-                    JOptionPane.showMessageDialog(frame, "Error: " + ex.getMessage());
+                    JOptionPane.showMessageDialog(null, "Error: " + ex.getMessage());
                 }
             }
         });
-
+        
         deleteProductButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                frame.dispose(); // Add this line
                 if (products.isEmpty()) {
-                    JOptionPane.showMessageDialog(frame, "No Products!");
+                    JOptionPane.showMessageDialog(null, "No Products!");
                     return;
                 }
-                String idInput = JOptionPane.showInputDialog(frame, "Enter product ID to delete:");
+                String idInput = JOptionPane.showInputDialog(null, "Enter product ID to delete:");
                 try {
                     NumberOnlyException.validateNumber(idInput, "^[0-9]+$");
                     int idInputInt = Integer.parseInt(idInput);
                     String result = deleteProduct(idInputInt);
-                    JOptionPane.showMessageDialog(frame, result);
+                    JOptionPane.showMessageDialog(null, result);
                 } catch (NumberOnlyException ex) {
-                    JOptionPane.showMessageDialog(frame, "Error: " + ex.getMessage());
+                    JOptionPane.showMessageDialog(null, "Error: " + ex.getMessage());
                 }
             }
         });
-
+        
         displayProductsButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                frame.dispose(); // Add this line
                 if (products.isEmpty()) {
-                    JOptionPane.showMessageDialog(frame, "No Products!");
+                    JOptionPane.showMessageDialog(null, "No Products!");
                     return;
                 }
                 displayAllProduct();
-                JOptionPane.showMessageDialog(frame, "Total Products: " + Product.getTotalProduct());
+                JOptionPane.showMessageDialog(null, "Total Products: " + Product.getTotalProduct());
             }
         });
-
+        
         searchProductsButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                frame.dispose(); // Add this line
                 searchMenu();
             }
         });
-
+        
         checkSoldProductsButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                frame.dispose(); // Add this line
                 AddToCart cart = new AddToCart(0, "", 0, 0, "");
                 cart.displaySoldProducts();
             }
         });
-
+        
         backButton.addActionListener(e -> frame.dispose());
-
-        frame.add(panel);
-        frame.setVisible(true);
     }
 
     // Search menu for products

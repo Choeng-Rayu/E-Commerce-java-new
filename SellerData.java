@@ -18,7 +18,7 @@ import javax.swing.table.DefaultTableModel;
 import javax.xml.crypto.Data;
 
 public class SellerData extends UserData {
-    public static int totalseller = 0;
+    
     public static ArrayList<SellerData> sellers = new ArrayList<>();
     int id;
     public static String pushByName;
@@ -30,7 +30,7 @@ public class SellerData extends UserData {
     // Constructor with parameters
     public SellerData(String firstName, String lastName, String email, String password) {
         super(firstName, lastName, email, password);
-        this.id = ++totalseller;
+        this.id = sellers.size() + 1;
     }
     // Constructor to match the required parameters
     public SellerData(int id, String firstName, String lastName, String email, String password) {
@@ -146,7 +146,7 @@ public class SellerData extends UserData {
     }
 
     public static int getTotalSeller() {
-        return totalseller;
+        return sellers.size();
     }
 
     // Seller menu for login and registration
@@ -155,54 +155,58 @@ public class SellerData extends UserData {
         frame.setSize(400, 300);
         frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         frame.setLocationRelativeTo(null);
-
+    
         JPanel panel = new JPanel();
         panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
-
+    
         JButton exitButton = new JButton("0. Exit");
         JButton loginButton = new JButton("1. Login");
         JButton registerButton = new JButton("2. Register");
         JButton backButton = new JButton("3. Back to Previous Menu");
-
+    
         panel.add(exitButton);
         panel.add(loginButton);
         panel.add(registerButton);
         panel.add(backButton);
-
+    
         exitButton.addActionListener(e -> {
-            JOptionPane.showMessageDialog(frame, "Exiting...");
+            frame.dispose(); // Dispose current frame before exiting
+            JOptionPane.showMessageDialog(null, "Exiting...");
             System.exit(0);
         });
-
+    
         loginButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                String emailInput = JOptionPane.showInputDialog(frame, "Enter email:");
-                String passwordInput = JOptionPane.showInputDialog(frame, "Enter password:");
+                frame.dispose(); // Dispose current frame before showing login dialog
+                String emailInput = JOptionPane.showInputDialog(null, "Enter email:");
+                String passwordInput = JOptionPane.showInputDialog(null, "Enter password:");
                 if (emailInput != null && passwordInput != null) {
                     if (login(emailInput, passwordInput)) {
                         menuSellerAccount();
                     } else {
-                        JOptionPane.showMessageDialog(frame, "Login failed. Please try again.");
+                        JOptionPane.showMessageDialog(null, "Login failed. Please try again.");
                     }
                 }
             }
         });
-
+    
         registerButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                String firstNameInput = JOptionPane.showInputDialog(frame, "Enter first name:");
-                String lastNameInput = JOptionPane.showInputDialog(frame, "Enter last name:");
-                String emailInput = JOptionPane.showInputDialog(frame, "Enter email:");
-                String passwordInput = JOptionPane.showInputDialog(frame, "Enter password:");
+                frame.dispose(); // Dispose current frame before showing registration dialog
+                String firstNameInput = JOptionPane.showInputDialog(null, "Enter first name:");
+                String lastNameInput = JOptionPane.showInputDialog(null, "Enter last name:");
+                String emailInput = JOptionPane.showInputDialog(null, "Enter email:");
+                String passwordInput = JOptionPane.showInputDialog(null, "Enter password:");
                 if (firstNameInput != null && lastNameInput != null && emailInput != null && passwordInput != null) {
                     register(firstNameInput, lastNameInput, emailInput, passwordInput);
                 }
             }
         });
-
+    
         backButton.addActionListener(e -> frame.dispose());
+    
         frame.add(panel);
         frame.setVisible(true);
     }
@@ -239,6 +243,7 @@ public class SellerData extends UserData {
         checkProfileButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                frame.dispose();
                 String emailInput = JOptionPane.showInputDialog(frame, "Please enter email again to verify:");
                 if (emailInput != null) {
                     String profileInfo = checkProfile(emailInput);
@@ -250,6 +255,7 @@ public class SellerData extends UserData {
         modifyAccountButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                frame.dispose();
                 String emailInput = JOptionPane.showInputDialog(frame, "Enter email:");
                 String passwordInput = JOptionPane.showInputDialog(frame, "Enter password:");
                 if (emailInput != null && passwordInput != null) {
@@ -262,6 +268,7 @@ public class SellerData extends UserData {
         modifyPasswordButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                frame.dispose();
                 String emailInput = JOptionPane.showInputDialog(frame, "Enter email:");
                 String passwordInput = JOptionPane.showInputDialog(frame, "Enter password:");
                 if (emailInput != null && passwordInput != null) {
@@ -274,6 +281,7 @@ public class SellerData extends UserData {
         productManagementButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                frame.dispose();
                 Product p = new Product(0, "", 0.0, 0, pushByName);
                 p.productManagement();
             }
@@ -306,6 +314,7 @@ public class SellerData extends UserData {
         deleteButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                
                 try {
                     String input = indexField.getText();
                     NumberOnlyException.validateNumber(input, "^[0-9]+$");
@@ -411,6 +420,7 @@ public class SellerData extends UserData {
         backButton.addActionListener(e -> frame.dispose());
     
         showAllButton.addActionListener(e -> {
+            frame.dispose();
             if (sellers.isEmpty()) {
                 JOptionPane.showMessageDialog(frame, "No Seller Accounts!");
             } else {
@@ -419,6 +429,7 @@ public class SellerData extends UserData {
         });
     
         searchButton.addActionListener(e -> {
+            frame.dispose();
             if (sellers.isEmpty()) {
                 JOptionPane.showMessageDialog(frame, "No Seller Accounts!");
             } else {
@@ -431,6 +442,7 @@ public class SellerData extends UserData {
         });
     
         deleteButton.addActionListener(e -> {
+
             if (sellers.isEmpty()) {
                 JOptionPane.showMessageDialog(frame, "No Seller Accounts!");
             } else {
@@ -440,6 +452,7 @@ public class SellerData extends UserData {
         });
     
         modifyAccountButton.addActionListener(e -> {
+            frame.dispose();
             if (sellers.isEmpty()) {
                 JOptionPane.showMessageDialog(frame, "No Seller Accounts!");
             } else {
@@ -452,6 +465,7 @@ public class SellerData extends UserData {
         });
     
         modifyPasswordButton.addActionListener(e -> {
+            frame.dispose();
             if (sellers.isEmpty()) {
                 JOptionPane.showMessageDialog(frame, "No Seller Accounts!");
             } else {

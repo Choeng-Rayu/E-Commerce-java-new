@@ -50,7 +50,7 @@ public class Main_project {
                 ((CustomerData) users[1]).menuCustomer(); // Open the customer menu
             }
         });
-
+        
         sellerButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {

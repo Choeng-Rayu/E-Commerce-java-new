@@ -20,13 +20,13 @@ public class CustomerData extends UserData {
 
     public CustomerData(int id, String firstName, String lastName, String email, String password, String dateRegistered) {
         super(firstName, lastName, email, password);
-        this.id = id;
+        this.id = cd.size()+1;
         this.dateRegister = dateRegistered;
     }
     // Constructor (initializes the object)
     public CustomerData(String firstName, String lastName, String email, String password) {
         super(firstName, lastName, email, password);
-        this.id = ++totalcd;
+        this.id = cd.size() + 1;
     }
 
 
@@ -48,7 +48,7 @@ public class CustomerData extends UserData {
     // Add a new constructor to match the required arguments
     public CustomerData(int id, String firstName, String lastName, String email, String password) {
         super(firstName, lastName, email, password);
-        this.id = id;    
+        this.id = cd.size() + 1;    
     }
     public static void loadCustomersIntoStaticList() {
         List<CustomerData> customers = DatabaseHandler.loadAllCustomer();
