@@ -57,7 +57,7 @@ public class Main_project {
                 ((SellerData) users[0]).menuSeller(); // Open the seller menu
             }
         });
-        //sellerButton.addActionListener(e -> ((SellerData) users[0]).menuSeller());  limda expression 
+        //sellerButton.addActionListener(e -> ((SellerData) users[0]).menuSeller());  limda expression 2
         adminButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
